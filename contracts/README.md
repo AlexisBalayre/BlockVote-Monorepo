@@ -14,4 +14,5 @@
 ## Documentation
 - [Documentation Semaphore](https://semaphore.appliedzkp.org/docs/introduction)
 - [Github Semaphore](https://github.com/semaphore-protocol/semaphore)
+- [SemaphoreVoting](https://github.com/semaphore-protocol/semaphore/blob/main/packages/contracts/contracts/extensions/SemaphoreVoting.sol)
     
