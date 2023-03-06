@@ -1,11 +1,17 @@
 # BlockVote Contracts 
 
 ## To Start
-```git clone git@github.com:AlexisBal/BlockVote-Monorepo.git
+```shell 
+    git clone git@github.com:AlexisBal/BlockVote-Monorepo.git
 
-cd BlockVote-Monorepo
+    cd BlockVote-Monorepo
 
-cd contracts
+    cd contracts
     
-yarn install```
+    yarn install
+```
+
+## Documentation
+[Semaphore - Documentation](https://semaphore.appliedzkp.org/docs/introduction)
+[Semaphore - Github](https://github.com/semaphore-protocol/semaphore)
     
