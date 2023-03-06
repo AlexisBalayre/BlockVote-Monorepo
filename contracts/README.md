@@ -12,6 +12,6 @@
 ```
 
 ## Documentation
-[Semaphore - Documentation](https://semaphore.appliedzkp.org/docs/introduction)
-[Semaphore - Github](https://github.com/semaphore-protocol/semaphore)
+- [Documentation Semaphore](https://semaphore.appliedzkp.org/docs/introduction)
+- [Github Semaphore](https://github.com/semaphore-protocol/semaphore)
     
