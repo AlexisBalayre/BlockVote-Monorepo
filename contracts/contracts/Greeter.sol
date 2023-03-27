@@ -1,5 +1,5 @@
-//SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+/* //SPDX-License-Identifier: MIT
+pragma solidity 0.8.18;
 
 import "@semaphore-protocol/contracts/interfaces/ISemaphore.sol";
 
@@ -40,3 +40,4 @@ contract Greeter {
         emit NewGreeting(greeting);
     }
 }
+ */
