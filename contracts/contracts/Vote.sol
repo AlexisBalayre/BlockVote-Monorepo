@@ -17,6 +17,27 @@ contract Vote {
         options = _options;
 	}
 
+    function bytes32ToString(bytes32 source) internal pure returns (string memory) {
+        uint256 length;
+        for (uint256 i = 0; i < 32; i++) {
+            if (source[i] == 0) {
+                length = i;
+                break;
+            }
+        }
+        bytes memory result = new bytes(length);
+        for (uint256 i = 0; i < length; i++) {
+            result[i] = source[i];
+        }
+        return string(result);
+    }
+
+    function stringToBytes32(string memory source) internal pure returns (bytes32 result) {
+        assembly {
+            result := mload(add(source, 32))
+        }
+    }
+
     function storeOptions(
         String calldata _options
     ) {
