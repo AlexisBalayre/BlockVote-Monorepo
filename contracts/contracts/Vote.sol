@@ -5,11 +5,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 import "./interfaces/IFactory.sol";
 
-//Mettre à jour fonction initalize avec nouveau paramètres conversion string vers bytes32
-
-//Getter pour valeurs options en String
-
-//Getter convertir un byte en string pour avoir et nombre et obtenir le nombre de voix par vote
+//Voir clairement le nombre de vote pour tout le monde puis pour une option du style (orphoz, 2)
 
 contract Vote {
     IFactory public adminContract;
@@ -17,9 +13,30 @@ contract Vote {
     mapping(bytes32 => uint256) private optionCounter;
     string public name;
 
+    function getOptions() external view returns (string[] memory _options) {
+        _options = new string[](options.length);
+        for (uint256 i = 0; i < options.length; ++i) {
+            _options[i] = bytes32ToString(options[i]);
+        }
+    }
+
+    function getOptionCounter(string calldata _option) external view returns (uint256 _optionCounter) {
+        _optionCounter = optionCounter[stringToBytes32(_option)];
+    }
+
+    function getAllOptionCounter() external view returns (uint256 _optionCounter, string memory _option) {
+        for (uint256 i = 0; i < options.length; ++i) {
+            _optionCounter = optionCounter[options[i]];
+            _option = bytes32ToString(options[i]);
+        }
+    }
+
     function initialize(
         string[] calldata _options
 	) public initializer {
+        for (uint256 i = 0; i < _options.length; ++i) {
+           options.push(stringToBytes32(_options[i]));
+        }
         adminContract = IFactory(msg.sender);
         options = _options;
 	}
