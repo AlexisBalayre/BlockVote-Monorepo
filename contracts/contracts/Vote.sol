@@ -7,7 +7,7 @@ import "./interfaces/IFactory.sol";
 
 contract Vote {
     IFactory public adminContract;
-    string[] public options;
+    mapping(uint256 => bytes32) public options;
     mapping(uint256 => uint256) public optionCounter;
 
     function initialize(
@@ -16,6 +16,12 @@ contract Vote {
         adminContract = IFactory(msg.sender);
         options = _options;
 	}
+
+    function storeOptions(
+        String calldata _options
+    ) {
+        options[0] = _options;
+    }
 
     error NotAuthorized(address _caller);
     error InvalidIndex(uint256 _index);
