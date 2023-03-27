@@ -5,6 +5,12 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 import "./interfaces/IFactory.sol";
 
+//Mettre à jour fonction initalize avec nouveau paramètres conversion string vers bytes32
+
+//Getter pour valeurs options en String
+
+//Getter convertir un byte en string pour avoir et nombre et obtenir le nombre de voix par vote
+
 contract Vote {
     IFactory public adminContract;
     bytes32[] private options;
