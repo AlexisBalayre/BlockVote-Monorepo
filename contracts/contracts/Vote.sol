@@ -7,8 +7,8 @@ import "./interfaces/IFactory.sol";
 
 contract Vote {
     IFactory public adminContract;
-    bytes32[] public options;
-    mapping(bytes32 => uint256) public optionCounter;
+    bytes32[] private options;
+    mapping(bytes32 => uint256) private optionCounter;
     string public name;
 
     function initialize(
