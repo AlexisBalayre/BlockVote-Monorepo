@@ -2,12 +2,12 @@
 pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 import "./interfaces/IFactory.sol";
 
-//Voir clairement le nombre de vote pour tout le monde puis pour une option du style (orphoz, 2)
-
-contract Vote {
+contract Vote is Initializable {
     IFactory public adminContract;
     bytes32[] private options;
     mapping(bytes32 => uint256) private optionCounter;
@@ -38,8 +38,19 @@ contract Vote {
            options.push(stringToBytes32(_options[i]));
         }
         adminContract = IFactory(msg.sender);
-        options = _options;
 	}
+
+    struct Result {
+        bytes32 option;
+        uint256 count;
+    }
+
+    function getResult() external view returns (Result[] memory result) {
+        result = new Result[](options.length);
+        for (uint256 i = 0; i < options.length; i++) {
+            result[i] = Result(options[i], optionCounter[options[i]]);
+        }
+    }
 
     function bytes32ToString(bytes32 source) internal pure returns (string memory) {
         uint256 length;
@@ -60,12 +71,6 @@ contract Vote {
         assembly {
             result := mload(add(source, 32))
         }
-    }
-
-    function storeOptions(
-        String calldata _options
-    ) {
-        options[0] = _options;
     }
 
     error NotAuthorized(address _caller);

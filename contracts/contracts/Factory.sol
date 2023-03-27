@@ -44,17 +44,11 @@ contract Votes is Ownable {
     }
 
     function deployVoteContract(
-        uint32 _levels,
-        IHasher _hasher,
-        IVerifier _verifier,
-        uint256 _numOptions
+        string[] calldata _options
     ) external onlyOwner {
         address clone = Clones.clone(voteContractImplementation);
         Vote(clone).initialize(
-            _levels,
-            _hasher,
-            _verifier,
-            _numOptions
+            _options
         );
         voteContracts.add(clone);
     }
