@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-import "./Semaphore/interfaces/ISemaphoreVerifier.sol";
+import "./semaphore/interfaces/ISemaphoreVerifier.sol";
 
 import "./interfaces/IGarageVoting.sol";
 import "./interfaces/IPoll.sol";
@@ -17,16 +17,17 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
     
     bytes32[] private options;
     string public name;
-    uint256 public totalVotes;
+    uint256 public totalVotesAmount;
     uint256 public startTimestamp;
     uint256 public endTimestamp;
 
-    uint256[] private votes;
+    mapping(uint256 => bytes32) public votes;
 
     mapping(uint256 => bool) public nullifierHashes;
 
     function initialize(
         string[] calldata _options,
+        string calldata _name,
         uint256 _pollID,
         uint256 _startTimestamp,
         uint256 _endTimestamp
@@ -38,14 +39,15 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         }
 
         pollID = _pollID;
+        name = _name;
 
         startTimestamp = _startTimestamp;
         endTimestamp = _endTimestamp;
 	}
     
-    function getEncryptedVotes() external view returns (uint256[] memory encryptedVotes) {
-        encryptedVotes = new uint256[](votes.length);
-        for (uint256 i = 0; i < votes.length; ++i) {
+    function getEncryptedVotes() external view returns (bytes32[] memory encryptedVotes) {
+        encryptedVotes = new bytes32[](totalVotesAmount);
+        for (uint256 i = 0; i < totalVotesAmount; ++i) {
             encryptedVotes[i] = votes[i];
         }
     }
@@ -53,7 +55,7 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
     function getPollData() external view returns (PollData memory pollData) {
         pollData.options = options;
         pollData.name = name;
-        pollData.totalVotes = totalVotes;
+        pollData.totalVotesAmount = totalVotesAmount;
         pollData.startTimestamp = startTimestamp;
         pollData.endTimestamp = endTimestamp;
     }
@@ -77,7 +79,7 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
     }
 
     function castVote(
-        uint256 _vote,
+        bytes32 _vote,
         uint256 _nullifierHash,
         uint256[8] calldata _proof
     ) external nonReentrant {
@@ -99,7 +101,7 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         verifier.verifyProof(
             merkleTreeRoot,
             _nullifierHash,
-            _vote,
+            uint256(_vote),
             pollID,
             _proof,
             merkleTreeDepth
@@ -107,8 +109,9 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
 
         nullifierHashes[_nullifierHash] = true;
 
-        votes.push(_vote);
-        totalVotes++;
+        uint256 voteIndex = totalVotesAmount;
+        totalVotesAmount++;
+        votes[voteIndex] = _vote;
     }
 
     function bytes32ToString(bytes32 source) internal pure returns (string memory) {

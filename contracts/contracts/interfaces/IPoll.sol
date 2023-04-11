@@ -15,7 +15,7 @@ interface IPoll {
     struct PollData {
         bytes32[] options;
         string name;
-        uint256 totalVotes;
+        uint256 totalVotesAmount;
         uint256 startTimestamp;
         uint256 endTimestamp;
     }
