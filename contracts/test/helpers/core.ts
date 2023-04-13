@@ -61,7 +61,6 @@ export async function deployContracts(
    const garageVoting: GarageVoting = await GarageVotingFactory.connect(signer).deploy(verifier.address);
    await garageVoting.deployed();
    Log.info(`GarageVoting contract has been deployed to: ${garageVoting.address}`);
-
     return garageVoting;
 }
 

@@ -110,12 +110,6 @@ contract GarageVoting is IGarageVoting, SemaphoreGroups, AccessControl {
             revert PollDoesNotExist(_pollId);
         }
 
-        /* Poll poll = Poll(pollContracts.at(_pollId));
-
-        if (poll.getPollState() == IPoll.PollState.Ended) {
-            revert PollHasAlreadyBeenStarted();
-        } */
-
         _addMember(_pollId, _identityCommitment);
     }
 }
