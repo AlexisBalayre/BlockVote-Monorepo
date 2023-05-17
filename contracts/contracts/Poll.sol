@@ -11,20 +11,41 @@ import "./semaphore/interfaces/ISemaphoreVerifier.sol";
 import "./interfaces/IGarageVoting.sol";
 import "./interfaces/IPoll.sol";
 
+/**
+ * @title Poll Contract
+ * @notice This contract represents a poll where users can vote.
+ * Each vote is encrypted using a zero-knowledge proof to ensure privacy and prevent double-voting.
+ */
 contract Poll is Initializable, IPoll, ReentrancyGuard {
+    // The ID of the poll
     uint256 public pollID;
+    // The GarageVoting contract instance
     IGarageVoting public garageVoting;
     
-    bytes32[] private options;
+    // The options of the poll
+    bytes32[] private options; 
+    // The name of the poll
     string public name;
+    // The total amount of votes cast in the poll
     uint256 public totalVotesAmount;
+    // The start timestamp of the poll
     uint256 public startTimestamp;
+    // The end timestamp of the poll
     uint256 public endTimestamp;
 
+    // Mapping of vote indices to their encrypted votes
     mapping(uint256 => bytes32) public votes;
-
+    // Mapping of nullifier hashes to their usage status
     mapping(uint256 => bool) public nullifierHashes;
 
+    /**
+     * @notice Initializes the poll.
+     * @param _options Options of the poll.
+     * @param _name Name of the poll.
+     * @param _pollID Id of the poll.
+     * @param _startTimestamp Start timestamp of the poll.
+     * @param _endTimestamp End timestamp of the poll.
+     */
     function initialize(
         string[] calldata _options,
         string calldata _name,
@@ -45,6 +66,10 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         endTimestamp = _endTimestamp;
 	}
     
+    /**
+     * @notice Returns the encrypted votes.
+     * @return encryptedVotes The encypted votes.
+     */
     function getEncryptedVotes() external view returns (bytes32[] memory encryptedVotes) {
         encryptedVotes = new bytes32[](totalVotesAmount);
         for (uint256 i = 0; i < totalVotesAmount; ++i) {
@@ -52,6 +77,10 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         }
     }
 
+    /**
+     * @notice Returns the poll data.
+     * @return pollData The Poll data.
+     */
     function getPollData() external view returns (PollData memory pollData) {
         pollData.options = options;
         pollData.name = name;
@@ -60,6 +89,10 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         pollData.endTimestamp = endTimestamp;
     }
 
+    /**
+     * @notice Returns the options.
+     * @return _options The Options.
+     */
     function getOptions() external view returns (OptionData[] memory _options) {
         _options = new OptionData[](options.length);
         for (uint256 i = 0; i < options.length; ++i) {
@@ -68,6 +101,10 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         }
     }
 
+    /**
+     * @notice Returns the poll state.
+     * @return state The Poll state.
+     */ 
     function getPollState() external view returns (PollState state) {
         if (block.timestamp <= startTimestamp) {
             state = PollState.Created;
@@ -78,6 +115,12 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         }
     }
 
+    /**
+     * @notice Casts a vote.
+     * @param _vote The Vote.
+     * @param _nullifierHash The Nullifier hash.
+     * @param _proof The Proof.
+     */
     function castVote(
         bytes32 _vote,
         uint256 _nullifierHash,
@@ -114,6 +157,11 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         votes[voteIndex] = _vote;
     }
 
+    /**
+     * @notice Converts bytes32 to string.
+     * @param source The Bytes32 source.
+     * @return result The String result.
+     */
     function bytes32ToString(bytes32 source) internal pure returns (string memory) {
         uint256 length;
         for (uint256 i = 0; i < 32; i++) {
@@ -129,6 +177,11 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
         return string(result);
     }
 
+    /**
+     * @notice Converts string to bytes32.
+     * @param source The String source.
+     * @return result The Bytes32 result.
+     */
     function stringToBytes32(string memory source) internal pure returns (bytes32 result) {
         assembly {
             result := mload(add(source, 32))
