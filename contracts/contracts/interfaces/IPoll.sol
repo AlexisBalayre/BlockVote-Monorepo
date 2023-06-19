@@ -23,7 +23,7 @@ interface IPoll {
 
     // The data of a poll
     struct PollData {
-        bytes32[] options;
+        string[] options;
         string name;
         uint256 totalVotesAmount;
         uint256 startTimestamp;

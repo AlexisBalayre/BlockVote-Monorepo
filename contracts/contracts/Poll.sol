@@ -82,7 +82,11 @@ contract Poll is Initializable, IPoll, ReentrancyGuard {
      * @return pollData The Poll data.
      */
     function getPollData() external view returns (PollData memory pollData) {
-        pollData.options = options;
+        bytes32[] memory optionsBytes =  options;
+        pollData.options = new string[](optionsBytes.length);
+        for (uint256 i = 0; i < optionsBytes.length; ++i) {
+            pollData.options[i] = bytes32ToString(optionsBytes[i]);
+        }
         pollData.name = name;
         pollData.totalVotesAmount = totalVotesAmount;
         pollData.startTimestamp = startTimestamp;

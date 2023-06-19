@@ -96,6 +96,11 @@ describe("Poll contract testing", () => {
       pollStartTimestamp,
       pollEndTimestamp
     );
+    let pollData = await poll.getPollData();
+    expect(pollData.options).to.deep.equal(pollOptions);
+    expect(pollData.name).to.equal(pollName);
+    expect(pollData.startTimestamp).to.equal(pollStartTimestamp);
+    expect(pollData.endTimestamp).to.equal(pollEndTimestamp);
   });
 
   // Test case: Admin should be able to add voters to a poll
@@ -234,8 +239,12 @@ describe("Poll contract testing", () => {
       BigNumber.from(encryptedVoteHash).toBigInt(),
       identities[0]
     );
+    let stateBeforeIncreaseTime = await poll.getPollState();
+    expect(stateBeforeIncreaseTime).to.equal(1)
     await ethers.provider.send("evm_increaseTime", [86400]);
     await ethers.provider.send("evm_mine", []);
+    let stateAfterIncreaseTime = await poll.getPollState();
+    expect(stateAfterIncreaseTime).to.equal(2)
     await expect(
       poll.castVote(encryptedVoteHash, fullProof.nullifierHash, fullProof.proof)
     ).to.be.reverted;

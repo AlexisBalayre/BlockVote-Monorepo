@@ -80,7 +80,7 @@ describe("Global test of the voting procedure", () => {
     pollOptions = ["Option 1", "Option 2", "Option 3"];
     pollName = "Test Poll";
     pollStartTimestamp = BigNumber.from(Math.floor(Date.now() / 1000));
-    pollEndTimestamp = BigNumber.from(Math.floor(Date.now() / 1000) + 86400);
+    pollEndTimestamp = BigNumber.from(Math.floor(Date.now() / 1000) + 100000);
 
     // Initialize the encrypted votes array
     encryptedVotes = [];
